@@ -73,13 +73,14 @@ def analyze_colors(frame_array):
     """
     Fast numpy-based RGB color detection.
     Returns (red_pct, green_pct, blue_pct) as float percentages.
+    picamera2 capture_array() returns BGR, so channels are index 2=R, 1=G, 0=B.
     """
     img = Image.fromarray(frame_array).resize((160, 120))
     arr = numpy.array(img, dtype=numpy.int16)
 
-    r = arr[:, :, 0]
+    r = arr[:, :, 2]
     g = arr[:, :, 1]
-    b = arr[:, :, 2]
+    b = arr[:, :, 0]
     total = float(r.size)
 
     red_mask   = (r.astype(numpy.int16) - g > COLOR_MARGIN) & (r.astype(numpy.int16) - b > COLOR_MARGIN)
