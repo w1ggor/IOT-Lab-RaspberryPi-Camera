@@ -1,14 +1,43 @@
 """
 Module 1 - Take a Selfie
 Captures a photo using the Raspberry Pi Camera and saves it to the images folder.
+Gives feedback with a buzzer beep and blue LED flash when the photo is taken.
 """
 
 import os
 import time
+import RPi.GPIO as GPIO
 from picamera2 import Picamera2
 
 
 IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
+
+PIN_LED_BLUE = 17
+PIN_BUZZER = 18
+
+# Buzzer is low level trigger: LOW = on, HIGH = off
+
+
+def setup_gpio():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(PIN_LED_BLUE, GPIO.OUT)
+    GPIO.setup(PIN_BUZZER, GPIO.OUT)
+    GPIO.output(PIN_LED_BLUE, GPIO.LOW)
+    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+
+
+def shutter_feedback():
+    GPIO.output(PIN_LED_BLUE, GPIO.HIGH)
+    GPIO.output(PIN_BUZZER, GPIO.LOW)
+    time.sleep(0.15)
+    GPIO.output(PIN_LED_BLUE, GPIO.LOW)
+    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+
+
+def cleanup_gpio():
+    GPIO.output(PIN_LED_BLUE, GPIO.LOW)
+    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+    GPIO.cleanup()
 
 
 def ensure_images_dir():
@@ -18,6 +47,7 @@ def ensure_images_dir():
 
 def take_selfie():
     ensure_images_dir()
+    setup_gpio()
 
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     filename = "selfie_" + timestamp + ".jpg"
@@ -40,6 +70,9 @@ def take_selfie():
 
     camera.stop()
     camera.close()
+
+    shutter_feedback()
+    cleanup_gpio()
 
     print("Photo saved to: " + filepath)
     return filepath
