@@ -27,10 +27,12 @@ def setup_gpio():
 
 
 def shutter_feedback():
-    GPIO.output(PIN_LED_BLUE, GPIO.HIGH)
     GPIO.output(PIN_BUZZER, GPIO.LOW)
-    time.sleep(0.15)
-    GPIO.output(PIN_LED_BLUE, GPIO.LOW)
+    for _ in range(4):
+        GPIO.output(PIN_LED_BLUE, GPIO.LOW)
+        time.sleep(0.1)
+        GPIO.output(PIN_LED_BLUE, GPIO.HIGH)
+        time.sleep(0.1)
     GPIO.output(PIN_BUZZER, GPIO.HIGH)
 
 
@@ -53,6 +55,7 @@ def take_selfie():
     filename = "selfie_" + timestamp + ".jpg"
     filepath = os.path.join(IMAGES_DIR, filename)
 
+    GPIO.output(PIN_LED_BLUE, GPIO.HIGH)
     print("Initializing camera...")
     camera = Picamera2()
 
