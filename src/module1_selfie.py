@@ -1,7 +1,8 @@
 """
 Module 1 - Take a Selfie
 Captures a photo using the Raspberry Pi Camera and saves it to the images folder.
-Gives feedback with a buzzer beep and blue LED flash when the photo is taken.
+Gives feedback with a buzzer beep and blue LED blink when the photo is taken.
+Buzzer is passive: requires PWM to produce sound.
 """
 
 import os
@@ -15,30 +16,29 @@ IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 PIN_LED_BLUE = 17
 PIN_BUZZER = 18
 
-# Buzzer is low level trigger: LOW = on, HIGH = off
-
 
 def setup_gpio():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PIN_LED_BLUE, GPIO.OUT)
     GPIO.setup(PIN_BUZZER, GPIO.OUT)
     GPIO.output(PIN_LED_BLUE, GPIO.LOW)
-    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+    GPIO.output(PIN_BUZZER, GPIO.LOW)
 
 
 def shutter_feedback():
-    GPIO.output(PIN_BUZZER, GPIO.LOW)
+    pwm = GPIO.PWM(PIN_BUZZER, 1000)
+    pwm.start(50)
     for _ in range(4):
         GPIO.output(PIN_LED_BLUE, GPIO.LOW)
         time.sleep(0.1)
         GPIO.output(PIN_LED_BLUE, GPIO.HIGH)
         time.sleep(0.1)
-    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+    pwm.stop()
 
 
 def cleanup_gpio():
     GPIO.output(PIN_LED_BLUE, GPIO.LOW)
-    GPIO.output(PIN_BUZZER, GPIO.HIGH)
+    GPIO.output(PIN_BUZZER, GPIO.LOW)
     GPIO.cleanup()
 
 
