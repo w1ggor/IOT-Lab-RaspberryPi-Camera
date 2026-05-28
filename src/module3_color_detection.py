@@ -156,7 +156,6 @@ def single_capture_mode():
     camera.start()
     time.sleep(2)
     frame = camera.capture_array()
-    frame = frame[:, :, ::-1]
     camera.stop()
     camera.close()
 
