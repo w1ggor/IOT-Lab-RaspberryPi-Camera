@@ -1,0 +1,7 @@
+# Requirements for Raspberry Pi Camera Lab Assignment
+# Install on Raspberry Pi with:
+#   sudo apt install python3-picamera2
+# or for legacy:
+#   sudo apt install python3-picamera
+
+picamera2
