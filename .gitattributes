@@ -1,0 +1,6 @@
+# Force LF line endings for all Python and text files
+# This ensures files work correctly on Raspberry Pi (Linux)
+*.py text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.gitignore text eol=lf
