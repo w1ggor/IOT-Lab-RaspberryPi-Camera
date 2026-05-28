@@ -151,7 +151,7 @@ def single_capture_mode():
     print("Taking photo for color detection...")
 
     camera = Picamera2()
-    config = camera.create_still_configuration(main={"size": (1920, 1080)})
+    config = camera.create_still_configuration(main={"size": (1920, 1080), "format": "BGR888"})
     camera.configure(config)
     camera.start()
     time.sleep(2)
